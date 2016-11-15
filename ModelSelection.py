@@ -618,10 +618,7 @@ if ans in ["r"]:
 		dnn(hm_epochs,hidden_size,degreepoly,dnnmodelaccuracy,n_features,n_classes)
 	elif modelselect in ["rnn"]:
 		hm_epochs = input("How many epochs? ")
-		#degreepoly = input("Degree Polynomial Feature Expansion: ")
 		degreepoly = 1
-		#print("Recommended Hidden Size: ",n_features**(int(degreepoly))*2)
-		#hidden_size = input("Enter Size of Hidden Layers: ")
 		recurrentnn(hm_epochs,degreepoly,rnnmodelaccuracy,n_features,n_classes)
 	else:
 		print("Unacceptable command")
@@ -638,16 +635,6 @@ elif ans in ["u"]:
 	for file in dirs:
 		print(file)
 	predictionname = input("\nEnter Prediction Data:")
-
-	#dataname = "BankMarketing"
-	#predictionname = "BankMarketing.txt"
-
-	#dataname = "CoverType"
-	#predictionname = "CoverType.txt"
-
-	#dataname = "ShuttlePhase"
-	#predictionname = "ShuttlePhase.csv"
-
 	df = np.loadtxt('predictiondata/%s' %predictionname, delimiter=",")
 	modeldetails = np.loadtxt("modelparameters/%s/nclassesfeatures.txt" %dataname,delimiter=",")
 	n_classes = int(modeldetails[0])
