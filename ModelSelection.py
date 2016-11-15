@@ -26,18 +26,18 @@ if not os.path.exists("./data"):
 
 def LoadData(modelselect):
 	print("Loading Data...")
-	df = np.loadtxt('data/%s' %datarun, delimiter=",")			
+	df = np.loadtxt('data/{}'.format(datarun), delimiter=",")
 	cols = df.shape[1]
 	X = df[:,0:cols-1]
 	y = df[:,cols-1:cols]
 	
-	if not os.path.exists("./modelparameters/%s" %dataname):
-		os.makedirs("./modelparameters/%s" %dataname)
-	with io.FileIO("modelparameters/%s/nclassesfeatures.txt" %dataname,"w") as file:
-		file = open("modelparameters/%s/nclassesfeatures.txt" %dataname,"w")
+	if not os.path.exists("./modelparameters/{}".format(dataname)):
+		os.makedirs("./modelparameters/{}".format(dataname))
+	with io.FileIO("modelparameters/{}/nclassesfeatures.txt".format(dataname),"w") as file:
+		file = open("modelparameters/{}/nclassesfeatures.txt".format(dataname),"w")
 		file.write(str(round(np.asscalar(max(y)-min(y)+1))) + "," + str(len(X[0])) + "," + str(len(X[:])))
 		file.flush()
-	
+
 	train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=0.2)
 	if modelselect in ['snn']:
 		train_y = train_y
@@ -63,10 +63,10 @@ def knn(knnmodelaccuracy,modelselect):
 	ans = input("Would you like to save the new parameters? (y/n): ")
 
 	if ans in ["y"]:
-		newmodelaccuracy = open("modelparameters/%s/knnmodelaccuracy.txt" %dataname,"w")
+		newmodelaccuracy = open("modelparameters/{}/knnmodelaccuracy.txt".format(dataname),"w")
 		newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(totaltimer))
 		newmodelaccuracy.flush()
-		savepickle = open('modelparameters/%s/KNNpickle.pickle' %dataname,'wb')
+		savepickle = open('modelparameters/{}/KNNpickle.pickle'.format(dataname),'wb')
 		pickle.dump(knnclf,savepickle)
 		print("Model Saved")
 	else:
@@ -87,7 +87,7 @@ def rf(rfmodelaccuracy,modelselect):
 	# 	sumprob = sum(rfpredictprob[:,i])
 	# 	rfpredictscores[i] = sumprob
 	# 	i = i+1
-	np.save("modelparameters/%s/rfprobscores" %dataname,np.array(rfpredictscores))
+	np.save("modelparameters/{}/rfprobscores".format(dataname),np.array(rfpredictscores))
 	accuracy = rfclf.score(test_x,test_y)
 	accuracytrain = rfclf.score(train_x,train_y)
 	f1 = metrics.f1_score(test_y,rfclf.predict(test_x))
@@ -99,10 +99,10 @@ def rf(rfmodelaccuracy,modelselect):
 	ans = input("Would you like to save the new parameters? (y/n): ")
 	
 	if ans in ["y"]:
-		newmodelaccuracy = open("modelparameters/%s/rfmodelaccuracy.txt" %dataname,"w")
+		newmodelaccuracy = open("modelparameters/{}/rfmodelaccuracy.txt".format(dataname),"w")
 		newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(totaltimer))
 		newmodelaccuracy.flush()
-		savepickle = open("modelparameters/%s/RFpickle.pickle" %dataname,'wb')
+		savepickle = open("modelparameters/{}/RFpickle.pickle".format(dataname),'wb')
 		pickle.dump(rfclf,savepickle)
 		print("Model Saved")
 	else:
@@ -112,7 +112,7 @@ def svm(C,svmmodelaccuracy,modelselect):
 	X,y,train_x,test_x,train_y,test_y = LoadData(modelselect)
 	starttime = time.time()
 	timemetric = "s"
-	svmclf = sklearn.svm.SVC(C=float(C),kernel='rbf',max_iter=1000)
+	svmclf = sklearn.svm.SVC(C=float(C),kernel='rbf',max_iter=10000)
 	print("Training...")
 	svmclf.fit(train_x, train_y)
 	accuracy = svmclf.score(test_x,test_y)
@@ -126,10 +126,10 @@ def svm(C,svmmodelaccuracy,modelselect):
 	ans = input("Would you like to save the new parameters? (y/n): ")
 
 	if ans in ["y"]:
-		newmodelaccuracy = open("modelparameters/%s/svmmodelaccuracy.txt" %dataname,"w")
+		newmodelaccuracy = open("modelparameters/{}/svmmodelaccuracy.txt".format(dataname),"w")
 		newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(C) + "," + str(totaltimer))
 		newmodelaccuracy.flush()
-		savepickle = open("modelparameters/%s/SVMpickle.pickle" %dataname,'wb')
+		savepickle = open("modelparameters/{}/SVMpickle.pickle".format(dataname),'wb')
 		pickle.dump(svmclf,savepickle)
 		print("Model Saved")
 	else:
@@ -198,10 +198,10 @@ def snn(regularization,hm_epochs,hidden_size,degreepoly,snnmodelaccuracy,modelse
 	ans = input("Would you like to save the new parameters? (y/n): ")
 
 	if ans in ["y"]:
-		newmodelaccuracy = open("modelparameters/%s/snnmodelaccuracy.txt" %dataname,"w")
+		newmodelaccuracy = open("modelparameters/{}/snnmodelaccuracy.txt".format(dataname),"w")
 		newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(regularization) + "," + str(maxiter) + "," + str(hidden_size) + "," + str(degreepoly) + "," + str(totaltimer))
 		newmodelaccuracy.flush()
-		savepickle = open('modelparameters/%s/SNNpickle.pickle' %dataname,'wb')
+		savepickle = open('modelparameters/{}/SNNpickle.pickle'.format(dataname),'wb')
 		pickle.dump(fmin,savepickle)
 		print("Model Saved")
 	else:
@@ -238,7 +238,7 @@ def dnn(hm_epochs,hidden_size,degreepoly,dnnmodelaccuracy,n_features,n_classes,m
 				epoch_loss += c
 				i += batch_size
 			print('Epoch', epoch+1, 'completed out of',hm_epochs,'loss:',epoch_loss)
-		saver.save(sess, "modelparameters/%s/DNNmodel.ckpt" %dataname)
+		saver.save(sess, "modelparameters/{}/DNNmodel.ckpt".format(dataname))
 		correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
 		accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
 
@@ -264,7 +264,7 @@ def dnn(hm_epochs,hidden_size,degreepoly,dnnmodelaccuracy,n_features,n_classes,m
 		ans = input("Would you like to save the new parameters? (y/n)")
 
 		if ans in ["y"]:
-			newmodelaccuracy = open("modelparameters/%s/dnnmodelaccuracy.txt" %dataname,"w")
+			newmodelaccuracy = open("modelparameters/{}/dnnmodelaccuracy.txt".format(dataname),"w")
 			newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(hm_epochs) + "," + str(hidden_size) + "," + str(degreepoly) + "," + str(totaltimer))
 			newmodelaccuracy.flush()
 			print("Model saved")
@@ -322,7 +322,7 @@ def recurrentnn(hm_epochs,degreepoly,rnnmodelaccuracy,n_features,n_classes,model
 				epoch_loss += c
 				i += batch_size
 			print('Epoch', epoch+1, 'completed out of',hm_epochs,'loss:',epoch_loss)
-		saver.save(sess, "modelparameters/%s/RNNmodel.ckpt" %dataname)
+		saver.save(sess, "modelparameters/{}/RNNmodel.ckpt".format(dataname))
 		correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
 		accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
 		
@@ -341,7 +341,7 @@ def recurrentnn(hm_epochs,degreepoly,rnnmodelaccuracy,n_features,n_classes,model
 		ans = input("Would you like to save the new parameters? (y/n)")
 
 		if ans in ["y"]:
-			newmodelaccuracy = open("modelparameters/%s/rnnmodelaccuracy.txt" %dataname,"w")
+			newmodelaccuracy = open("modelparameters/{}/rnnmodelaccuracy.txt".format(dataname),"w")
 			newmodelaccuracy.write(str(accuracy) + "," + str(f1) + "," + str(hm_epochs) + "," + str(degreepoly) + "," + str(n_chunks) + "," + str(chunk_size) + "," + str(totaltimer))
 			newmodelaccuracy.flush()
 			print("Model saved")
@@ -379,27 +379,27 @@ def printresult(totaltimer,timemetric,prevmodelaccuracy,prevmodelf1,accuracy,f1,
 
 def summaryscores():
 	try:
-		knnmodelaccuracy = np.loadtxt("modelparameters/%s/knnmodelaccuracy.txt" %dataname,delimiter=",")
+		knnmodelaccuracy = np.loadtxt("modelparameters/{}/knnmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		knnmodelaccuracy = [0,0,0]
 	try:
-		rfmodelaccuracy = np.loadtxt("modelparameters/%s/rfmodelaccuracy.txt" %dataname,delimiter=",")
+		rfmodelaccuracy = np.loadtxt("modelparameters/{}/rfmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		rfmodelaccuracy = [0,0,0]
 	try:
-		svmmodelaccuracy = np.loadtxt("modelparameters/%s/svmmodelaccuracy.txt" %dataname,delimiter=",")
+		svmmodelaccuracy = np.loadtxt("modelparameters/{}/svmmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		svmmodelaccuracy = [0,0,0,0]
 	try:
-		snnmodelaccuracy = np.loadtxt("modelparameters/%s/snnmodelaccuracy.txt" %dataname,delimiter=",")
+		snnmodelaccuracy = np.loadtxt("modelparameters/{}/snnmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		snnmodelaccuracy = [0,0,0,0,0,0,0]
 	try:
-		dnnmodelaccuracy = np.loadtxt("modelparameters/%s/dnnmodelaccuracy.txt" %dataname,delimiter=",")
+		dnnmodelaccuracy = np.loadtxt("modelparameters/{}/dnnmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		dnnmodelaccuracy = [0,0,0,0,0,0]
 	try:
-		rnnmodelaccuracy = np.loadtxt("modelparameters/%s/rnnmodelaccuracy.txt" %dataname,delimiter=",")
+		rnnmodelaccuracy = np.loadtxt("modelparameters/{}/rnnmodelaccuracy.txt".format(dataname),delimiter=",")
 	except FileNotFoundError:
 		rnnmodelaccuracy = [0,0,0,0,0,0,0]
 	knntime,knnmetric = modeltimer(knnmodelaccuracy[2])
@@ -528,13 +528,13 @@ def recurrent_neural_network(x,n_classes,n_features,rnn_size,n_chunks,chunk_size
 def createNNdata(dataname,degreepoly,train_x,train_y,test_x,test_y):
 	info = [dataname,degreepoly]
 	try:
-		data = genfromtxt('modelparameters/{0}/{1}NNTraining.csv'.format(info[0],info[1]),delimiter=',')
+		data = genfromtxt('modelparameters/{}/{}NNTraining.csv'.format(info[0],info[1]),delimiter=',')
 		print("Loading Dataset...")
 	except OSError:
 		print("Building Dataset...")
 		buildNNData(degreepoly,info,train_x,test_x,train_y,test_y)        
-		data = genfromtxt('modelparameters/{0}/{1}NNTraining.csv'.format(info[0],info[1]),delimiter=',')
-	test_data = genfromtxt('modelparameters/{0}/{1}NNTesting.csv'.format(info[0],info[1]),delimiter=',')
+		data = genfromtxt('modelparameters/{}/{}NNTraining.csv'.format(info[0],info[1]),delimiter=',')
+	test_data = genfromtxt('modelparameters/{}/{}NNTesting.csv'.format(info[0],info[1]),delimiter=',')
 
 	print("Converting Training Set OneHot...")
 	train_x=np.array([ i[1::] for i in data])
@@ -558,7 +558,7 @@ def buildNNData(degreepoly,info,train_x,test_x,train_y,test_y):
 	featuresPrime = isPrime(n_features)
 	if lenPrime == True:
 		dnntrain_x = dnntrain_x[0:dnntrain_x.shape[0]-1,:]
-	f=open('modelparameters/{0}/{1}NNTraining.csv'.format(info[0],info[1]),'w')
+	f=open('modelparameters/{}/{}NNTraining.csv'.format(info[0],info[1]),'w')
 	for i,j in enumerate(dnntrain_x):
 		if featuresPrime == True:
 			print("Number of Features Prime. \nAn additional column of 1s has been added to the data allow for the RNN to function")
@@ -568,7 +568,7 @@ def buildNNData(degreepoly,info,train_x,test_x,train_y,test_y):
 		k=np.append(np.array(train_y[i]),j)
 		f.write(",".join([str(s) for s in k]) + '\n')
 	f.close()
-	f=open('modelparameters/{0}/{1}NNTesting.csv'.format(info[0],info[1]),'w')
+	f=open('modelparameters/{}/{}NNTesting.csv'.format(info[0],info[1]),'w')
 	for i,j in enumerate(dnntest_x):
 		if featuresPrime == True:
 			j = j[0:n_features]
@@ -606,8 +606,8 @@ def isPrime(n):		#Return True if Prime
 
 def use_simple_neural_network(input_data):
 	X = input_data
-	fmin = pd.read_pickle('modelparameters/%s/SNNpickle.pickle' %dataname)
-	snnmodelaccuracy = np.loadtxt("modelparameters/%s/snnmodelaccuracy.txt" %dataname,delimiter=",")
+	fmin = pd.read_pickle('modelparameters/{}/SNNpickle.pickle'.format(dataname))
+	snnmodelaccuracy = np.loadtxt("modelparameters/{}/snnmodelaccuracy.txt".format(dataname),delimiter=",")
 	hidden_size = int(snnmodelaccuracy[4])
 	degreepoly = int(snnmodelaccuracy[5])
 	if degreepoly > 1:
@@ -621,19 +621,19 @@ def use_simple_neural_network(input_data):
 
 def use_deep_neural_network(input_data):
 	x = tf.placeholder('float', [None, n_features])
-	dnnmodelaccuracy = np.loadtxt("modelparameters/%s/dnnmodelaccuracy.txt" %dataname,delimiter=",")
+	dnnmodelaccuracy = np.loadtxt("modelparameters/{}/dnnmodelaccuracy.txt".format(dataname),delimiter=",")
 	hidden_size = int(dnnmodelaccuracy[3])
 	prediction = deep_neural_network_model(x,hidden_size,n_classes,n_features)
 	saver = tf.train.Saver()
 
 	with tf.Session() as sess:
 		sess.run(tf.initialize_all_variables())
-		saver.restore(sess,"modelparameters/%s/DNNmodel.ckpt" %dataname)
+		saver.restore(sess,"modelparameters/{}/DNNmodel.ckpt".format(dataname))
 		result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[input_data]}),1)))
 		print(result)
 
 def use_recurrent_neural_network(input_data):
-	rnnmodelaccuracy = np.loadtxt("modelparameters/%s/rnnmodelaccuracy.txt" %dataname,delimiter=",")
+	rnnmodelaccuracy = np.loadtxt("modelparameters/{}/rnnmodelaccuracy.txt".format(dataname),delimiter=",")
 	n_chunks = int(rnnmodelaccuracy[4])
 	chunk_size = int(rnnmodelaccuracy[5])
 	input_data = input_data.reshape((n_chunks,chunk_size))
@@ -644,13 +644,13 @@ def use_recurrent_neural_network(input_data):
 
 	with tf.Session() as sess:
 		sess.run(tf.initialize_all_variables())
-		saver.restore(sess,"modelparameters/%s/RNNmodel.ckpt" %dataname)
+		saver.restore(sess,"modelparameters/{}/RNNmodel.ckpt".format(dataname))
 		result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[input_data]}),1)))
 		print("RNN Predict: ",result)
 
 def ModelSelection():	
 	try:
-		datadescription = np.loadtxt("modelparameters/%s/nclassesfeatures.txt" %dataname,delimiter=",")
+		datadescription = np.loadtxt("modelparameters/{}/nclassesfeatures.txt".format(dataname),delimiter=",")
 		print("Length of Data:", int(datadescription[2]))
 		print("Number of Features:", int(datadescription[1]))
 		print("Number of Classes:", int(datadescription[0]))
@@ -658,7 +658,7 @@ def ModelSelection():
 		modelselect = ''
 		print('Initializing First Time...')
 		LoadData(modelselect)
-		datadescription = np.loadtxt("modelparameters/%s/nclassesfeatures.txt" %dataname,delimiter=",")
+		datadescription = np.loadtxt("modelparameters/{}/nclassesfeatures.txt".format(dataname),delimiter=",")
 		print("Length of Data:", int(datadescription[2]))
 		print("Number of Features:", int(datadescription[1]))
 		print("Number of Classes:", int(datadescription[0]))
@@ -729,25 +729,25 @@ elif ans in ["u"]:
 	#dataname = "ShuttlePhase"
 	#predictionname = "ShuttlePhase.csv"
 
-	df = np.loadtxt('predictiondata/%s' %predictionname, delimiter=",")
-	modeldetails = np.loadtxt("modelparameters/%s/nclassesfeatures.txt" %dataname,delimiter=",")
+	df = np.loadtxt('predictiondata/{}'.format(predictionname), delimiter=",")
+	modeldetails = np.loadtxt("modelparameters/{}/nclassesfeatures.txt".format(dataname),delimiter=",")
 	n_classes = int(modeldetails[0])
 	n_features = int(modeldetails[1])
 	datalength = df.shape[1]
 	X = df[0,0:n_features]
 	input_data = np.array([X])
 	try:
-		knnclf = pd.read_pickle('modelparameters/%s/KNNpickle.pickle' %dataname)
+		knnclf = pd.read_pickle('modelparameters/{}/KNNpickle.pickle'.format(dataname))
 		print("KNN Predict: ", knnclf.predict(input_data))
 	except FileNotFoundError:
 		print("KNN untrained")
 	try:
-		rfclf = pd.read_pickle('modelparameters/%s/RFpickle.pickle' %dataname)
+		rfclf = pd.read_pickle('modelparameters/{}/RFpickle.pickle'.format(dataname))
 		print("RF Predict: ", rfclf.predict(input_data))
 	except FileNotFoundError:
 		print("RF untrained")
 	try:
-		svmclf = pd.read_pickle('modelparameters/%s/SVMpickle.pickle' %dataname)
+		svmclf = pd.read_pickle('modelparameters/{}/SVMpickle.pickle'.format(dataname))
 		print("SVM Predict: ", svmclf.predict(input_data))
 	except FileNotFoundError:
 		print("SVM untrained")
