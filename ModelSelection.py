@@ -80,14 +80,14 @@ def rf(rfmodelaccuracy,modelselect):
 	print("Training...")
 	rfclf.fit(train_x,train_y)
 	n_classes = round(np.asscalar(max(y)-min(y)+1))
-	rfpredictprob = rfclf.predict_proba(train_x)
-	rfpredictscores = np.zeros((n_classes,),dtype=np.int)
+	#rfpredictprob = rfclf.predict_proba(train_x)
+	#rfpredictscores = np.zeros((n_classes,),dtype=np.int)
 	# i = 0 
 	# while i < n_classes:
 	# 	sumprob = sum(rfpredictprob[:,i])
 	# 	rfpredictscores[i] = sumprob
 	# 	i = i+1
-	np.save("modelparameters/{}/rfprobscores".format(dataname),np.array(rfpredictscores))
+	#np.save("modelparameters/{}/rfprobscores".format(dataname),np.array(rfpredictscores))
 	accuracy = rfclf.score(test_x,test_y)
 	accuracytrain = rfclf.score(train_x,train_y)
 	f1 = metrics.f1_score(test_y,rfclf.predict(test_x))
